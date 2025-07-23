@@ -1,4 +1,3 @@
-
 <#
 .SYNOPSIS
     Retrieves Microsoft Teams meeting attendance data using Microsoft Graph SDK.
@@ -25,7 +24,7 @@
 param (
     [string]$UserPrincipalName = "testing@exchangelabs.online",
     [datetime]$StartDate = "2025-01-01T00:00:00Z",
-    [datetime]$EndDate = "2025-07-01T00:00:00Z",
+    [datetime]$EndDate = "2025-07-16T00:00:00Z",
     [string]$AttendanceOutput = "TeamsAttendanceReport.csv",
     [string]$FailedOutput = "FailedMeetings.csv",
     [switch]$EnableDebug
@@ -206,6 +205,17 @@ function Main {
         } catch {
             Write-Warning "Error processing meeting: $($meeting.Subject)"
             Write-Host "Error: $($_.Exception.Message)"
+            if ($null -ne $_.Exception.Response) {
+                    $headers = $_.Exception.Response.Headers
+                    Write-Host "Request ID: $($headers['request-id'])"
+                    Write-Host "Client Request ID: $($headers['client-request-id'])"
+                    Write-Host "Timestamp: $($headers['Date'])"
+                } else {
+                    Write-Host "No response headers available."
+                }
+
+            Write-Host "Full Exception: $($_.Exception.Message)"
+
             $failedMeetings += $meeting
         }
     }
