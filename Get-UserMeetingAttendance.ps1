@@ -1,3 +1,4 @@
+
 <#
 .SYNOPSIS
     Retrieves Microsoft Teams meeting attendance data using Microsoft Graph SDK.
@@ -22,8 +23,11 @@
 #>
 
 param (
-    [string]$UserPrincipalName = "testing@exchangelabs.online",
-    [datetime]$StartDate = "2025-01-01T00:00:00Z",
+    [string]$ApplicationId = "AppID",
+    [string]$SecuredPassword = "ClientSecret",
+    [string]$tenantID = "TenantID",
+    [string]$UserPrincipalName = "targetMailbox@contoso.com",
+    [datetime]$StartDate = "2025-07-01T00:00:00Z",
     [datetime]$EndDate = "2025-07-16T00:00:00Z",
     [string]$AttendanceOutput = "TeamsAttendanceReport.csv",
     [string]$FailedOutput = "FailedMeetings.csv",
@@ -34,7 +38,10 @@ param (
 # Connect to Microsoft Graph
 # =========================
 function Connect-ToGraph {
-    Connect-MgGraph -Scopes "OnlineMeetings.Read", "Calendars.Read", "OnlineMeetingArtifact.Read.All"
+    $SecuredPasswordPassword = ConvertTo-SecureString -String $SecuredPassword -AsPlainText -Force
+    $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $ApplicationId, $SecuredPasswordPassword
+
+    Connect-MgGraph -TenantId $tenantID -ClientSecretCredential $ClientSecretCredential
 }
 
 function Get-UserObjectId {
