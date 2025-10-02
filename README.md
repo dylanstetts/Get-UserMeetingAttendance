@@ -18,6 +18,9 @@
   - `OnlineMeetings.Read`
   - `Calendars.Read`
   - `OnlineMeetingArtifact.Read.All`
+- Application Access Policy for Teams Calendar data is required
+  - See more: https://learn.microsoft.com/en-us/graph/cloud-communication-online-meeting-application-access-policy#configure-application-access-policy
+
 
 Install the SDK if needed:
 
